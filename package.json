@@ -1,0 +1,33 @@
+{
+  "name": "inferno-bank-terraform",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/DevKike/inferno-bank-terraform-users#readme",
+  "bugs": {
+    "url": "https://github.com/DevKike/inferno-bank-terraform-users/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevKike/inferno-bank-terraform-users.git"
+  },
+  "license": "ISC",
+  "author": "DevKike",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:lambda": "node build.js",
+    "deploy": "npm run build:lambda && cd terraform && terraform apply -auto-approve"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^24.3.0",
+    "adm-zip": "^0.5.16",
+    "esbuild": "^0.25.9",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@aws-sdk/client-api-gateway": "^3.879.0",
+    "@aws-sdk/client-lambda": "^3.879.0"
+  }
+}
