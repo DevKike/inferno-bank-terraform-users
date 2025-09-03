@@ -1,5 +1,5 @@
 const { build } = require('esbuild');
-const { readdirSync, mkdirSync, readFileSync, writeFileSync } = require('fs');
+const { readdirSync, mkdirSync } = require('fs');
 const { join } = require('path');
 const AdmZip = require('adm-zip');
 
