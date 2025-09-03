@@ -20,3 +20,4 @@ variable "jwt_secret_key" {
   description = "JWT Secret Key"
   sensitive   = true
 }
+

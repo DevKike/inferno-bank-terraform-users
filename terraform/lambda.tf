@@ -1,6 +1,7 @@
 module "lambda_shared" {
-  source    = "./modules/shared"
-  role_name = "users_lambda_role"
+  source             = "./modules/shared"
+  role_name          = "users_lambda_role"
+  dynamodb_table_arn = module.dynamodb.table_arn
 }
 
 # REGISTER LAMBDA
