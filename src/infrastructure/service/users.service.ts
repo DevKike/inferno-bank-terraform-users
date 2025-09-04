@@ -3,18 +3,15 @@ import { AlreadyExistsException } from '../../domain/exceptions/already-exists.e
 import { IUsersRepository } from '../../domain/repository/users.repository.interface';
 import { IUsersService } from '../../domain/service/users.service.interface';
 import { environments } from '../environments/environments.dev';
-
-import { HashProvider } from '../providers/hash.provider';
-import { SecretsManagerProvider } from '../providers/secrets-manager.provider';
+import { IHashProvider } from '../providers/hash/interface/hash.provider.interface';
+import { ISecretsManagerProvider } from '../providers/secrets-manager/interface/secrets-manager.provider.interface';
 
 export class UsersService implements IUsersService {
-  private readonly _secretsManagerProvider: SecretsManagerProvider;
-  private readonly _hashProvider: HashProvider;
-
-  constructor(private readonly _usersRepository: IUsersRepository) {
-    this._secretsManagerProvider = new SecretsManagerProvider();
-    this._hashProvider = new HashProvider();
-  }
+  constructor(
+    private readonly _secretsManagerProvider: ISecretsManagerProvider,
+    private readonly _hashProvider: IHashProvider,
+    private readonly _usersRepository: IUsersRepository
+  ) {}
 
   async register(user: IUserRegisterBody): Promise<void> {
     try {

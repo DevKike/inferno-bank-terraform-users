@@ -10,6 +10,8 @@ import { UserRegisterUseCase } from '../../../application/use-cases/user-registe
 import { UsersService } from '../../service/users.service';
 import { UsersRepository } from '../../repository/users.repository';
 import { HTTP_STATUS_CODE } from '../../../domain/enums/http-status-code.enum';
+import { SecretsManagerProvider } from '../../providers/secrets-manager/secrets-manager.provider';
+import { HashProvider } from '../../providers/hash/hash.provider';
 
 const userRegisterHandler = async (
   event: APIGatewayProxyEvent
@@ -18,7 +20,11 @@ const userRegisterHandler = async (
     const userData = event.body as unknown as IUserRegisterBody;
 
     await new UserRegisterUseCase(
-      new UsersService(new UsersRepository())
+      new UsersService(
+        new SecretsManagerProvider(),
+        new HashProvider(),
+        new UsersRepository()
+      )
     ).execute(userData);
 
     return {
