@@ -31,6 +31,27 @@ export class UsersRepository implements IUsersRepository {
     );
   }
 
+  async findByPhone(phone: IUser['phone']): Promise<IUser | null> {
+    const command = new QueryCommand({
+      TableName: this._tableName,
+      IndexName: environments.phoneIndexName,
+      KeyConditionExpression: `${environments.phoneIndexKey} = :phone`,
+      ExpressionAttributeValues: {
+        ':phone': phone,
+      },
+    });
+
+    try {
+      const response = await this._dynamoDbClient.send(command);
+
+      if (!response.Items || response.Items.length === 0) return null;
+
+      return response.Items[0] as IUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findByEmail(email: IUser['email']): Promise<IUser | null> {
     const command = new QueryCommand({
       TableName: this._tableName,
