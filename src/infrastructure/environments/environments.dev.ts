@@ -1,5 +1,5 @@
 export const environments = {
-  awsRegion: process.env.AWS_REGION || 'us-west-1',
-  usersTableName: process.env.USERS_TABLE_NAME || 'users',
-  saltRounds: process.env.SALT_ROUNDS || 10,
+  awsRegion: process.env.awsRegion,
+  usersTableName: process.env.tableName,
+  usersSecretsManagerName: process.env.secretsManagerName,
 };

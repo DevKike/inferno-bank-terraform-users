@@ -4,4 +4,6 @@ aws_region = "us-west-1"
 
 base_cidr_block = "10.0.0.0/16"
 
+secrets_manager_key_value = 
+
 jwt_secret_key = ""
