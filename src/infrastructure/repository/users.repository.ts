@@ -33,12 +33,10 @@ export class UsersRepository implements IUsersRepository {
     });
 
     try {
-      const response = await this._dynamoDbClient.send(command);
-      console.log('🚀 ~ UsersRepository ~ save ~ response:', response);
+      await this._dynamoDbClient.send(command);
 
       return item;
     } catch (error) {
-      console.error('Error at Dynamo service', error);
       throw error;
     }
   }

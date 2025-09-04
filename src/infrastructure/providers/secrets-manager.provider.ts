@@ -12,7 +12,6 @@ export class SecretsManagerProvider {
   }
 
   async get<T>(secretName: string): Promise<T> {
-    console.log('🚀 ~ SecretsManagerProvider ~ get ~ secretName:', secretName);
     try {
       const command = new GetSecretValueCommand({
         SecretId: secretName,
@@ -25,7 +24,6 @@ export class SecretsManagerProvider {
 
       return JSON.parse(secret.SecretString);
     } catch (error) {
-      console.error('🚀 ~ SecretsManagerProvider ~ get ~ error:', error);
       throw error;
     }
   }
