@@ -9,15 +9,24 @@ resource "aws_dynamodb_table" "table" {
   }
 
   attribute {
-    name = var.gsi_key
-    type = var.gsi_key_type
+    name = var.email_gsi_key
+    type = var.email_gsi_key_type
+  }
+
+  attribute {
+    name = var.phone_gsi_key
+    type = var.phone_gsi_key_type
   }
 
   global_secondary_index {
-    name            = var.gsi_name
-    hash_key        = var.gsi_key
+    name            = var.email_gsi_name
+    hash_key        = var.email_gsi_key
     projection_type = var.gsi_projection_type
-    read_capacity   = 5
-    write_capacity  = 5
+  }
+
+  global_secondary_index {
+    name            = var.phone_gsi_name
+    hash_key        = var.phone_gsi_key
+    projection_type = var.gsi_projection_type
   }
 }

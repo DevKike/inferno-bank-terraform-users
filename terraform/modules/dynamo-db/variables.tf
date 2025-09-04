@@ -22,20 +22,38 @@ variable "hash_key_type" {
   default     = "S"
 }
 
-variable "gsi_name" {
-  description = "Name of the GSI"
+variable "email_gsi_name" {
+  description = "Name of the GSI for email"
   type        = string
   default     = "EmailIndex"
 }
 
-variable "gsi_key" {
-  description = "GSI partition key"
+variable "email_gsi_key" {
+  description = "GSI partition key for email"
   type        = string
   default     = "email"
 }
 
-variable "gsi_key_type" {
-  description = "GSI partition key type"
+variable "email_gsi_key_type" {
+  description = "GSI partition key type for email"
+  type        = string
+  default     = "S"
+}
+
+variable "phone_gsi_name" {
+  description = "Name of the GSI for phone"
+  type        = string
+  default     = "PhoneIndex"
+}
+
+variable "phone_gsi_key" {
+  description = "GSI partition key for phone"
+  type        = string
+  default     = "phone"
+}
+
+variable "phone_gsi_key_type" {
+  description = "GSI partition key type for phone"
   type        = string
   default     = "S"
 }

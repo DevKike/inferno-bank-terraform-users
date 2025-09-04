@@ -1,7 +1,5 @@
-import {
-  IUserRegisterResponse,
-  IUserRegisterBody,
-} from '../../domain/entity/users.entity.interface';
+import { IUserRegisterBody } from '../../domain/entity/users.entity.interface';
+import { AlreadyExistsException } from '../../domain/exceptions/already-exists.exception';
 import { IUsersRepository } from '../../domain/repository/users.repository.interface';
 import { IUsersService } from '../../domain/service/users.service.interface';
 import { environments } from '../environments/environments.dev';
@@ -18,8 +16,17 @@ export class UsersService implements IUsersService {
     this._hashProvider = new HashProvider();
   }
 
-  async register(user: IUserRegisterBody): Promise<IUserRegisterResponse> {
+  async register(user: IUserRegisterBody): Promise<void> {
     try {
+      const existingUserByEmail = await this._usersRepository.findByEmail(
+        user.email
+      );
+
+      if (existingUserByEmail)
+        throw new AlreadyExistsException(
+          `User with email: ${user.email} already is registered`
+        );
+
       const secret = await this._secretsManagerProvider.get<{ key: string }>(
         environments.usersSecretsManagerName!
       );
@@ -29,25 +36,10 @@ export class UsersService implements IUsersService {
         secret.key
       );
 
-      const newUser = await this._usersRepository.save({
+      await this._usersRepository.save({
         ...user,
         password: hashedPassword,
-        address: null,
-        phone: null,
-        image: null,
       });
-
-      const {
-        uuid,
-        password,
-        document,
-        address,
-        phone,
-        image,
-        ...userResponse
-      } = newUser;
-
-      return userResponse;
     } catch (error) {
       throw error;
     }

@@ -21,6 +21,10 @@ module "register_user_lambda" {
     awsRegion          = var.aws_region
     tableName          = module.dynamodb.table_name
     secretsManagerName = module.secrets_manager_shared.secrets_manager_name
+    emailIndexName     = module.dynamodb.email_gsi_name
+    emailIndexKey      = module.dynamodb.email_gsi_key
+    phoneIndexName     = module.dynamodb.phone_gsi_name
+    phoneIndexKey      = module.dynamodb.phone_gsi_key
   }
 }
 

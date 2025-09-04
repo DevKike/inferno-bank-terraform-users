@@ -1,7 +1,15 @@
 import { IUsersRepository } from '../../domain/repository/users.repository.interface';
-import { IUserSave, IUser } from '../../domain/entity/users.entity.interface';
+import {
+  IUserSave,
+  IUser,
+  IUserStored,
+} from '../../domain/entity/users.entity.interface';
 import { environments } from '../environments/environments.dev';
-import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+import {
+  DynamoDBDocumentClient,
+  PutCommand,
+  QueryCommand,
+} from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,19 +31,38 @@ export class UsersRepository implements IUsersRepository {
     );
   }
 
-  async save(user: IUserSave): Promise<IUser> {
+  async findByEmail(email: IUser['email']): Promise<IUser | null> {
+    const command = new QueryCommand({
+      TableName: this._tableName,
+      IndexName: environments.emailIndexName,
+      KeyConditionExpression: `${environments.emailIndexKey} = :email`,
+      ExpressionAttributeValues: {
+        ':email': email,
+      },
+    });
+
+    try {
+      const response = await this._dynamoDbClient.send(command);
+
+      if (!response.Items || response.Items.length === 0) return null;
+
+      return response.Items[0] as IUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async save(user: IUserSave): Promise<void> {
     const userId: IUser['uuid'] = uuidv4();
-    const item: IUser = { uuid: userId, ...user };
+    const storedUser: IUserStored = { uuid: userId, ...user };
 
     const command = new PutCommand({
       TableName: this._tableName,
-      Item: item,
+      Item: storedUser,
     });
 
     try {
       await this._dynamoDbClient.send(command);
-
-      return item;
     } catch (error) {
       throw error;
     }
