@@ -1,18 +1,13 @@
-import {
-  IUserRegisterBody,
-  IUserRegisterResponse,
-} from '../../domain/entity/users.entity.interface';
+import { IUserRegisterBody } from '../../domain/entity/users.entity.interface';
 import { IUsersService } from '../../domain/service/users.service.interface';
 import { IUseCase } from '../../domain/use-case/use-case.interface';
 
-export class UserRegisterUseCase
-  implements IUseCase<IUserRegisterBody, IUserRegisterResponse>
-{
+export class UserRegisterUseCase implements IUseCase<IUserRegisterBody, void> {
   constructor(private readonly _usersService: IUsersService) {}
 
-  async execute(input: IUserRegisterBody): Promise<IUserRegisterResponse> {
+  async execute(input: IUserRegisterBody): Promise<void> {
     try {
-      return this._usersService.register(input);
+      await this._usersService.register(input);
     } catch (error) {
       throw error;
     }

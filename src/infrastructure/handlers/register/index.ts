@@ -17,7 +17,7 @@ const userRegisterHandler = async (
   try {
     const userData = event.body as unknown as IUserRegisterBody;
 
-    const response = await new UserRegisterUseCase(
+    await new UserRegisterUseCase(
       new UsersService(new UsersRepository())
     ).execute(userData);
 
@@ -26,7 +26,6 @@ const userRegisterHandler = async (
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: 'User registered with success!',
-        data: response,
       }),
     };
   } catch (error) {

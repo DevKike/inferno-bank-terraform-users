@@ -10,16 +10,14 @@ export interface IUser {
   image: string | null;
 }
 
-export interface IUserSave extends Omit<IUser, 'uuid'> {}
-
-export interface IUserRegisterBody
+export interface IUserSave
   extends Pick<
     IUser,
     'name' | 'lastName' | 'email' | 'password' | 'document'
   > {}
 
-export interface IUserRegisterResponse
-  extends Omit<
-    IUser,
-    'uuid' | 'password' | 'document' | 'address' | 'phone' | 'image'
-  > {}
+export interface IUserStored extends IUserSave {
+  uuid: string;
+}
+
+export interface IUserRegisterBody extends IUserSave {}
