@@ -15,8 +15,12 @@ module "register_user_lambda" {
   api_gateway_id            = module.api_gateway_shared.api_id
   api_gateway_execution_arn = module.api_gateway_shared.execution_arn
 
+
+
   environment_variables = {
-    ENV = "dev"
+    awsRegion          = var.aws_region
+    tableName          = module.dynamodb.table_name
+    secretsManagerName = module.secrets_manager_shared.secrets_manager_name
   }
 }
 

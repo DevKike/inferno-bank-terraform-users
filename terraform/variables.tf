@@ -11,6 +11,11 @@ variable "aws_access_key" {
   sensitive   = true
 }
 
+variable "secrets_manager_key_value" {
+  description = "value"
+  sensitive = true
+}
+
 variable "aws_secret_access_key" {
   description = "AWS secret key"
   sensitive   = true
@@ -20,4 +25,3 @@ variable "jwt_secret_key" {
   description = "JWT Secret Key"
   sensitive   = true
 }
-
