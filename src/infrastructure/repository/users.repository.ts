@@ -10,9 +10,10 @@ export class UsersRepository implements IUsersRepository {
   private readonly _dynamoDbClient: DynamoDBDocumentClient;
 
   constructor() {
-    this._tableName = environments.usersTableName;
+    this._tableName = environments.usersTableName!;
     this._dynamoDbClient = DynamoDBDocumentClient.from(
-      new DynamoDBClient({ region: environments.awsRegion }),
+      new DynamoDBClient({ region: environments.awsRegion! }),
+
       {
         marshallOptions: {
           convertClassInstanceToMap: true,
