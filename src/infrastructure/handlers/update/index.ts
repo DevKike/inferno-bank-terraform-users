@@ -12,7 +12,7 @@ import httpErrorHandler from '@middy/http-error-handler';
 import { usersUpdateSchema } from '../../schemas/update/users-update.schema';
 import { IUserUpdate } from '../../../domain/entity/users.entity.interface';
 
-const userUpdateHandler = async (
+const usersUpdateHandler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
@@ -37,7 +37,7 @@ const userUpdateHandler = async (
   }
 };
 
-export const handler = middy(userUpdateHandler)
+export const handler = middy(usersUpdateHandler)
   .use(jsonBodyParser())
   .use(validateSchemaMiddleware(usersUpdateSchema))
   .use(errorFormatter())
