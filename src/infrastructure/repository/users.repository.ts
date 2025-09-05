@@ -7,6 +7,7 @@ import {
 } from '../../domain/entity/users.entity.interface';
 import {
   DynamoDBDocumentClient,
+  GetCommand,
   PutCommand,
   QueryCommand,
   UpdateCommand,
@@ -18,11 +19,11 @@ import { NotFoundException } from '../../domain/exceptions/not-found.exception';
 import { BadRequestException } from '../../domain/exceptions/bad-request.exception';
 
 export class UsersRepository implements IUsersRepository {
-  private readonly _tableName: string;
   private readonly _dynamoDbClient: DynamoDBDocumentClient;
+  private readonly _tableName: string;
+  private readonly _partitionKey!: string;
 
   constructor(private readonly _configurationProvider: IConfigurationProvider) {
-    this._tableName = this._configurationProvider.getUsersTableName();
     this._dynamoDbClient = DynamoDBDocumentClient.from(
       new DynamoDBClient({
         region: this._configurationProvider.getAwsRegion(),
@@ -35,6 +36,28 @@ export class UsersRepository implements IUsersRepository {
         },
       }
     );
+    this._tableName = this._configurationProvider.getUsersTableName();
+    this._partitionKey =
+      this._configurationProvider.getUsersTablePartitionKey();
+  }
+
+  async findById(id: IUser['uuid']): Promise<IUser | null> {
+    const command = new GetCommand({
+      TableName: this._tableName,
+      Key: {
+        [this._partitionKey]: id,
+      },
+    });
+
+    try {
+      const response = await this._dynamoDbClient.send(command);
+
+      if (!response.Item) return null;
+
+      return response.Item as IUser;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findByEmail(email: IUser['email']): Promise<IUser | null> {
@@ -135,7 +158,7 @@ export class UsersRepository implements IUsersRepository {
     try {
       const command = new UpdateCommand({
         TableName: this._tableName,
-        Key: { uuid: id },
+        Key: { [this._partitionKey]: id },
         UpdateExpression: `SET ${updateExpressions.join(', ')}`,
         ExpressionAttributeNames: expressionAttributeNames,
         ExpressionAttributeValues: expressionAttributeValues,

@@ -29,7 +29,8 @@ export interface IUserLoginRes {
   token: string;
 }
 
-export interface IUserUpdate extends Pick<IUser, 'address' | 'phone'> {}
+export interface IUserUpdate
+  extends Partial<Pick<IUser, 'address' | 'phone'>> {}
 
 export interface IUserUpdateInput extends IUserUpdate {
   id: IUser['uuid'];

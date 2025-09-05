@@ -4,11 +4,20 @@ import {
   IUserUpdate,
   IUserUpdateRes,
 } from '../../domain/entity/users.entity.interface';
+import { AlreadyExistsException } from '../../domain/exceptions/already-exists.exception';
 import { IUsersRepository } from '../../domain/repository/users.repository.interface';
 import { IUsersService } from '../../domain/service/users.service.interface';
 
 export class UsersService implements IUsersService {
   constructor(private readonly _usersRepository: IUsersRepository) {}
+
+  async getById(id: IUser['uuid']): Promise<IUser | null> {
+    try {
+      return this._usersRepository.findById(id);
+    } catch (error) {
+      throw error;
+    }
+  }
 
   async getByEmail(email: IUser['email']): Promise<IUser | null> {
     try {
@@ -47,8 +56,15 @@ export class UsersService implements IUsersService {
     userData: IUserUpdate
   ): Promise<IUserUpdateRes> {
     try {
+      if (userData.phone) {
+        const existingUserByPhone = await this._usersRepository.findByPhone(
+          userData.phone
+        );
+        if (existingUserByPhone)
+          throw new AlreadyExistsException('Phone already exists');
+      }
+
       const updatedUser = await this._usersRepository.update(id, userData);
-      console.log('🚀 ~ UsersService ~ update ~ updatedUser:', updatedUser);
 
       const { uuid, password, ...updatedData } = updatedUser;
 
