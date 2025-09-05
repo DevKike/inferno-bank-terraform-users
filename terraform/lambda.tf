@@ -95,3 +95,30 @@ resource "aws_apigatewayv2_route" "update_user_route" {
   authorization_type = "CUSTOM"
   authorizer_id      = aws_apigatewayv2_authorizer.jwt_authorizer.id
 }
+
+# GET USER PROFILE LAMBDA
+module "get_profile_user_lambda" {
+  source = "./modules/lambda"
+
+  function_name             = "get_profile_user_lambda"
+  lambda_role_arn           = module.lambda_shared.lambda_role_arn
+  source_code_hash          = filebase64sha256("${path.module}/../lambda/get-profile.zip")
+  zip_file                  = "${path.module}/../lambda/get-profile.zip"
+  api_gateway_id            = module.api_gateway_shared.api_id
+  api_gateway_execution_arn = module.api_gateway_shared.execution_arn
+
+  environment_variables = {
+    awsRegion = var.aws_region
+    tableName : module.dynamodb.table_name
+    tablePartitionKey = module.dynamodb.hash_key
+  }
+}
+
+# GET PROFILE USER ROUTE
+resource "aws_apigatewayv2_route" "get_profile_user_route" {
+  api_id             = module.api_gateway_shared.api_id
+  route_key          = "GET /users/profile"
+  target             = "integrations/${module.get_profile_user_lambda.integration_id}"
+  authorization_type = "CUSTOM"
+  authorizer_id      = aws_apigatewayv2_authorizer.jwt_authorizer.id
+}

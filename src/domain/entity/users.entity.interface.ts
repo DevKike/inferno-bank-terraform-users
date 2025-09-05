@@ -37,3 +37,5 @@ export interface IUserUpdateInput extends IUserUpdate {
 }
 
 export interface IUserUpdateRes extends Omit<IUser, 'uuid' | 'password'> {}
+
+export interface IUserGetProfileRes extends IUserUpdateRes {}
