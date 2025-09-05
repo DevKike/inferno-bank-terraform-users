@@ -31,6 +31,7 @@ resource "aws_iam_policy" "lambda_dynamodb_policy" {
         Action = [
           "dynamodb:GetItem",
           "dynamodb:PutItem",
+          "dynamodb:UpdateItem",
           "dynamodb:Scan",
           "dynamodb:Query"
         ]

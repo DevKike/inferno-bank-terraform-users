@@ -3,15 +3,19 @@ import {
   IUserSave,
   IUser,
   IUserStored,
+  IUserUpdate,
 } from '../../domain/entity/users.entity.interface';
 import {
   DynamoDBDocumentClient,
   PutCommand,
   QueryCommand,
+  UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
 import { IConfigurationProvider } from '../../domain/providers/configuration/interface/configuration.provider.interface';
+import { NotFoundException } from '../../domain/exceptions/not-found.exception';
+import { BadRequestException } from '../../domain/exceptions/bad-request.exception';
 
 export class UsersRepository implements IUsersRepository {
   private readonly _tableName: string;
@@ -107,6 +111,43 @@ export class UsersRepository implements IUsersRepository {
 
     try {
       await this._dynamoDbClient.send(command);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(id: IUser['uuid'], userData: IUserUpdate): Promise<IUser> {
+    const updateExpressions: string[] = [];
+    const expressionAttributeNames: Record<string, string> = {};
+    const expressionAttributeValues: Record<string, any> = {};
+
+    Object.entries(userData).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        updateExpressions.push(`#${key} = :${key}`);
+        expressionAttributeNames[`#${key}`] = key;
+        expressionAttributeValues[`:${key}`] = value;
+      }
+    });
+
+    if (updateExpressions.length === 0)
+      throw new BadRequestException('No valid fields to update');
+
+    try {
+      const command = new UpdateCommand({
+        TableName: this._tableName,
+        Key: { uuid: id },
+        UpdateExpression: `SET ${updateExpressions.join(', ')}`,
+        ExpressionAttributeNames: expressionAttributeNames,
+        ExpressionAttributeValues: expressionAttributeValues,
+        ReturnValues: 'ALL_NEW',
+      });
+
+      const response = await this._dynamoDbClient.send(command);
+
+      if (!response.Attributes)
+        throw new NotFoundException(`User with id: ${id} was not found`);
+
+      return response.Attributes as IUser;
     } catch (error) {
       throw error;
     }

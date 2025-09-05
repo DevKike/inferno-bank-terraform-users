@@ -28,3 +28,11 @@ export interface IUserLoginRes {
   user: Omit<IUser, 'uuid' | 'email' | 'password' | 'document'>;
   token: string;
 }
+
+export interface IUserUpdate extends Pick<IUser, 'address' | 'phone'> {}
+
+export interface IUserUpdateInput extends IUserUpdate {
+  id: IUser['uuid'];
+}
+
+export interface IUserUpdateRes extends Omit<IUser, 'uuid' | 'password'> {}

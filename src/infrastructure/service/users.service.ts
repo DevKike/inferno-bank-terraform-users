@@ -1,6 +1,8 @@
 import {
   IUser,
   IUserRegisterBody,
+  IUserUpdate,
+  IUserUpdateRes,
 } from '../../domain/entity/users.entity.interface';
 import { IUsersRepository } from '../../domain/repository/users.repository.interface';
 import { IUsersService } from '../../domain/service/users.service.interface';
@@ -35,6 +37,22 @@ export class UsersService implements IUsersService {
   async create(user: IUserRegisterBody): Promise<void> {
     try {
       await this._usersRepository.save(user);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async update(
+    id: IUser['uuid'],
+    userData: IUserUpdate
+  ): Promise<IUserUpdateRes> {
+    try {
+      const updatedUser = await this._usersRepository.update(id, userData);
+      console.log('🚀 ~ UsersService ~ update ~ updatedUser:', updatedUser);
+
+      const { uuid, password, ...updatedData } = updatedUser;
+
+      return updatedData;
     } catch (error) {
       throw error;
     }

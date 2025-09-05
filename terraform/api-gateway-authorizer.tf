@@ -4,9 +4,9 @@ module "jwt_authorizer_lambda" {
   function_name             = "jwt_authorizer"
   lambda_role_arn           = module.lambda_shared.lambda_role_arn
   zip_file                  = "${path.module}/../lambda/jwt-authorizer.zip"
-  source_code_hash          = filebase64sha256("${path.module}/../lambdas/jwt-authorizer.zip")
-  api_gateway_id            = module.api_gateway.api_id
-  api_gateway_execution_arn = module.api_gateway.execution_arn
+  source_code_hash          = filebase64sha256("${path.module}/../lambda/jwt-authorizer.zip")
+  api_gateway_id            = module.api_gateway_shared.api_id
+  api_gateway_execution_arn = module.api_gateway_shared.execution_arn
 
   environment_variables = {
     jwtSecretKey = var.jwt_secret_key

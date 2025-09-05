@@ -66,3 +66,30 @@ resource "aws_apigatewayv2_route" "login_user_route" {
   route_key = "POST /users/login"
   target    = "integrations/${module.login_user_lambda.integration_id}"
 }
+
+# UPDATE USER LAMBDA
+module "update_user_lambda" {
+  source = "./modules/lambda"
+
+  function_name             = "update_user_lambda"
+  lambda_role_arn           = module.lambda_shared.lambda_role_arn
+  source_code_hash          = filebase64sha256("${path.module}/../lambda/update.zip")
+  zip_file                  = "${path.module}/../lambda/update.zip"
+  api_gateway_id            = module.api_gateway_shared.api_id
+  api_gateway_execution_arn = module.api_gateway_shared.execution_arn
+
+  environment_variables = {
+    awsRegion    = var.aws_region
+    tableName    = module.dynamodb.table_name
+    jwtSecretKey = var.jwt_secret_key
+  }
+}
+
+# UPDATE USER ROUTE
+resource "aws_apigatewayv2_route" "update_user_route" {
+  api_id             = module.api_gateway_shared.api_id
+  route_key          = "PUT /users/profile"
+  target             = "integrations/${module.update_user_lambda.integration_id}"
+  authorization_type = "CUSTOM"
+  authorizer_id      = aws_apigatewayv2_authorizer.jwt_authorizer.id
+}
