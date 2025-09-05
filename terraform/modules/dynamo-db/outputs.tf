@@ -8,7 +8,12 @@ output "table_arn" {
   value       = aws_dynamodb_table.table.arn
 }
 
-output "email_gsi_name" {
+output "hash_key" {
+  description = "Hash key (partition key) of the DynamoDB table"
+  value       = var.hash_key
+}
+
+output "email_gsi_name" { 
   description = "Name of the Email GSI"
   value       = var.email_gsi_name
 }

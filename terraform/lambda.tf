@@ -79,9 +79,11 @@ module "update_user_lambda" {
   api_gateway_execution_arn = module.api_gateway_shared.execution_arn
 
   environment_variables = {
-    awsRegion    = var.aws_region
-    tableName    = module.dynamodb.table_name
-    jwtSecretKey = var.jwt_secret_key
+    awsRegion         = var.aws_region
+    tableName         = module.dynamodb.table_name
+    tablePartitionKey = module.dynamodb.hash_key
+    phoneIndexName    = module.dynamodb.phone_gsi_name
+    phoneIndexKey     = module.dynamodb.phone_gsi_key
   }
 }
 

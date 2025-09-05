@@ -21,6 +21,10 @@ export class ConfigurationProvider implements IConfigurationProvider {
     return environments.usersTableName!;
   }
 
+  getUsersTablePartitionKey(): string {
+    return environments.usersTablePartitionKey!;
+  }
+
   getSecretsManagerName(): string {
     return environments.usersSecretsManagerName!;
   }

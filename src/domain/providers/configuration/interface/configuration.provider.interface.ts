@@ -1,6 +1,7 @@
 export interface IConfigurationProvider {
   getAwsRegion(): string;
   getUsersTableName(): string;
+  getUsersTablePartitionKey(): string;
   getSecretsManagerName(): string;
   getEmailIndexName(): string;
   getEmailIndexKey(): string;
