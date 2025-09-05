@@ -6,6 +6,5 @@ export const usersUpdateSchema: outputSchema = {
     address: { type: 'string', minLength: 8 },
     phone: { type: 'string', minLength: 10 },
   },
-  required: ['address', 'phone'],
   additionalProperties: false,
 };
