@@ -3,7 +3,7 @@ import {
   SecretsManagerClient,
 } from '@aws-sdk/client-secrets-manager';
 import { NotFoundException } from '../../../domain/exceptions/not-found.exception';
-import { ISecretsManagerProvider } from './interface/secrets-manager.provider.interface';
+import { ISecretsManagerProvider } from '../../../domain/providers/secret-manager/interface/secrets-manager.provider.interface';
 
 export class SecretsManagerProvider implements ISecretsManagerProvider {
   private readonly _secretsManagerClient: SecretsManagerClient;

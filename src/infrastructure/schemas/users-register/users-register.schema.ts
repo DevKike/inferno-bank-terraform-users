@@ -1,6 +1,6 @@
 import { outputSchema } from '../../../domain/schema/output-schema.interface';
 
-export const userRegisterSchema: outputSchema = {
+export const usersRegisterSchema: outputSchema = {
   type: 'object',
   properties: {
     name: { type: 'string', minLength: 3 },

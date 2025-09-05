@@ -13,7 +13,7 @@ variable "aws_access_key" {
 
 variable "secrets_manager_key_value" {
   description = "value"
-  sensitive = true
+  sensitive   = true
 }
 
 variable "aws_secret_access_key" {
@@ -22,6 +22,12 @@ variable "aws_secret_access_key" {
 }
 
 variable "jwt_secret_key" {
-  description = "JWT Secret Key"
+  description = "Secret key for JWT token signin"
+  sensitive   = true
+}
+
+variable "jwt_token_expiration" {
+  description = "JWT token expiration time in seconds"
+  type        = number
   sensitive   = true
 }

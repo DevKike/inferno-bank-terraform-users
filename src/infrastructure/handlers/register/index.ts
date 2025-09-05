@@ -2,16 +2,17 @@ import jsonBodyParser from '@middy/http-json-body-parser';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import middy from '@middy/core';
 import { validateSchemaMiddleware } from '../../middlewares/validate-schema.middleware';
-import { userRegisterSchema } from '../../schemas/user-register/user-register.schema';
+import { usersRegisterSchema } from '../../schemas/users-register/users-register.schema';
 import { errorFormatter } from '../../utils/error-formatter/error-formatter.util';
 import httpErrorHandler from '@middy/http-error-handler';
 import { IUserRegisterBody } from '../../../domain/entity/users.entity.interface';
-import { UserRegisterUseCase } from '../../../application/use-cases/user-register.use-case';
+import { UserRegisterUseCase } from '../../../application/use-cases/register/user-register.use-case';
 import { UsersService } from '../../service/users.service';
 import { UsersRepository } from '../../repository/users.repository';
 import { HTTP_STATUS_CODE } from '../../../domain/enums/http-status-code.enum';
 import { SecretsManagerProvider } from '../../providers/secrets-manager/secrets-manager.provider';
 import { HashProvider } from '../../providers/hash/hash.provider';
+import { ConfigurationProvider } from '../../providers/configuration/configuration.provider';
 
 const userRegisterHandler = async (
   event: APIGatewayProxyEvent
@@ -19,12 +20,13 @@ const userRegisterHandler = async (
   try {
     const userData = event.body as unknown as IUserRegisterBody;
 
+    const configurationInstance = ConfigurationProvider.getInstance();
+
     await new UserRegisterUseCase(
-      new UsersService(
-        new SecretsManagerProvider(),
-        new HashProvider(),
-        new UsersRepository()
-      )
+      new UsersService(new UsersRepository(configurationInstance)),
+      new SecretsManagerProvider(),
+      new HashProvider(),
+      configurationInstance
     ).execute(userData);
 
     return {
@@ -42,6 +44,6 @@ const userRegisterHandler = async (
 
 export const handler = middy(userRegisterHandler)
   .use(jsonBodyParser())
-  .use(validateSchemaMiddleware(userRegisterSchema))
+  .use(validateSchemaMiddleware(usersRegisterSchema))
   .use(errorFormatter())
   .use(httpErrorHandler());

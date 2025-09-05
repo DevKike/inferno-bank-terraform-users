@@ -4,7 +4,6 @@ import {
   IUser,
   IUserStored,
 } from '../../domain/entity/users.entity.interface';
-import { environments } from '../environments/environments.dev';
 import {
   DynamoDBDocumentClient,
   PutCommand,
@@ -12,15 +11,18 @@ import {
 } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
+import { IConfigurationProvider } from '../../domain/providers/configuration/interface/configuration.provider.interface';
 
 export class UsersRepository implements IUsersRepository {
   private readonly _tableName: string;
   private readonly _dynamoDbClient: DynamoDBDocumentClient;
 
-  constructor() {
-    this._tableName = environments.usersTableName!;
+  constructor(private readonly _configurationProvider: IConfigurationProvider) {
+    this._tableName = this._configurationProvider.getUsersTableName();
     this._dynamoDbClient = DynamoDBDocumentClient.from(
-      new DynamoDBClient({ region: environments.awsRegion! }),
+      new DynamoDBClient({
+        region: this._configurationProvider.getAwsRegion(),
+      }),
 
       {
         marshallOptions: {
@@ -31,11 +33,32 @@ export class UsersRepository implements IUsersRepository {
     );
   }
 
+  async findByEmail(email: IUser['email']): Promise<IUser | null> {
+    const command = new QueryCommand({
+      TableName: this._tableName,
+      IndexName: this._configurationProvider.getEmailIndexName(),
+      KeyConditionExpression: `${this._configurationProvider.getEmailIndexKey()} = :email`,
+      ExpressionAttributeValues: {
+        ':email': email,
+      },
+    });
+
+    try {
+      const response = await this._dynamoDbClient.send(command);
+
+      if (!response.Items || response.Items.length === 0) return null;
+
+      return response.Items[0] as IUser;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findByPhone(phone: IUser['phone']): Promise<IUser | null> {
     const command = new QueryCommand({
       TableName: this._tableName,
-      IndexName: environments.phoneIndexName,
-      KeyConditionExpression: `${environments.phoneIndexKey} = :phone`,
+      IndexName: this._configurationProvider.getPhoneIndexName(),
+      KeyConditionExpression: `${this._configurationProvider.getPhoneIndexKey()} = :phone`,
       ExpressionAttributeValues: {
         ':phone': phone,
       },
@@ -52,13 +75,13 @@ export class UsersRepository implements IUsersRepository {
     }
   }
 
-  async findByEmail(email: IUser['email']): Promise<IUser | null> {
+  async findByDocument(document: IUser['document']): Promise<IUser | null> {
     const command = new QueryCommand({
       TableName: this._tableName,
-      IndexName: environments.emailIndexName,
-      KeyConditionExpression: `${environments.emailIndexKey} = :email`,
+      IndexName: this._configurationProvider.getDocumentIndexName(),
+      KeyConditionExpression: `${this._configurationProvider.getDocumentIndexKey()} = :document`,
       ExpressionAttributeValues: {
-        ':email': email,
+        ':document': document,
       },
     });
 

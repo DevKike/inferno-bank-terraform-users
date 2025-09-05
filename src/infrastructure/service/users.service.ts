@@ -1,42 +1,40 @@
-import { IUserRegisterBody } from '../../domain/entity/users.entity.interface';
-import { AlreadyExistsException } from '../../domain/exceptions/already-exists.exception';
+import {
+  IUser,
+  IUserRegisterBody,
+} from '../../domain/entity/users.entity.interface';
 import { IUsersRepository } from '../../domain/repository/users.repository.interface';
 import { IUsersService } from '../../domain/service/users.service.interface';
-import { environments } from '../environments/environments.dev';
-import { IHashProvider } from '../providers/hash/interface/hash.provider.interface';
-import { ISecretsManagerProvider } from '../providers/secrets-manager/interface/secrets-manager.provider.interface';
 
 export class UsersService implements IUsersService {
-  constructor(
-    private readonly _secretsManagerProvider: ISecretsManagerProvider,
-    private readonly _hashProvider: IHashProvider,
-    private readonly _usersRepository: IUsersRepository
-  ) {}
+  constructor(private readonly _usersRepository: IUsersRepository) {}
 
-  async register(user: IUserRegisterBody): Promise<void> {
+  async getByEmail(email: IUser['email']): Promise<IUser | null> {
     try {
-      const existingUserByEmail = await this._usersRepository.findByEmail(
-        user.email
-      );
+      return this._usersRepository.findByEmail(email);
+    } catch (error) {
+      throw error;
+    }
+  }
 
-      if (existingUserByEmail)
-        throw new AlreadyExistsException(
-          `User with email: ${user.email} already is registered`
-        );
+  async getByPhone(phone: IUser['phone']): Promise<IUser | null> {
+    try {
+      return await this._usersRepository.findByPhone(phone);
+    } catch (error) {
+      throw error;
+    }
+  }
 
-      const secret = await this._secretsManagerProvider.get<{ key: string }>(
-        environments.usersSecretsManagerName!
-      );
+  async getByDocument(document: IUser['document']): Promise<IUser | null> {
+    try {
+      return this._usersRepository.findByDocument(document);
+    } catch (error) {
+      throw error;
+    }
+  }
 
-      const hashedPassword = await this._hashProvider.hash(
-        user.password,
-        secret.key
-      );
-
-      await this._usersRepository.save({
-        ...user,
-        password: hashedPassword,
-      });
+  async create(user: IUserRegisterBody): Promise<void> {
+    try {
+      await this._usersRepository.save(user);
     } catch (error) {
       throw error;
     }

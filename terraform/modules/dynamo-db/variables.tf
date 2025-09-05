@@ -58,6 +58,24 @@ variable "phone_gsi_key_type" {
   default     = "S"
 }
 
+variable "document_gsi_key" {
+  description = "GSI partition key for document"
+  type        = string
+  default     = "document"
+}
+
+variable "document_gsi_name" {
+  description = "Name of the GSI for document"
+  type        = string
+  default     = "DocumentIndex"
+}
+
+variable "document_gsi_key_type" {
+  description = "GSI partition key type for document"
+  type        = string
+  default     = "S"
+}
+
 variable "gsi_projection_type" {
   description = "ProjectionType for the GSI"
   type        = string

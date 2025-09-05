@@ -6,4 +6,8 @@ export const environments = {
   emailIndexKey: process.env.emailIndexKey,
   phoneIndexName: process.env.phoneIndexName,
   phoneIndexKey: process.env.phoneIndexKey,
+  documentIndexName: process.env.documentIndexName,
+  documentIndexKey: process.env.documentIndexKey,
+  jwtSecretKey: process.env.jwtSecretKey,
+  jwtTokenExpiration: Number(process.env.jwtTokenExpiration),
 };

@@ -27,3 +27,13 @@ output "phone_gsi_key" {
   description = "Key name of the Phone GSI"
   value       = var.phone_gsi_key
 }
+
+output "document_gsi_name" {
+  description = "Name of the Document GSI"
+  value       = var.document_gsi_name
+}
+
+output "document_gsi_key" {
+  description = "Key name of the Document GSI"
+  value       = var.document_gsi_key
+}
