@@ -38,7 +38,8 @@ export class UsersLoginUseCase
         name: user.name,
       });
 
-      const { uuid, email, password, document, ...userData } = user;
+      const { uuid, email, password, document, address, image, ...userData } =
+        user;
 
       return {
         user: userData,

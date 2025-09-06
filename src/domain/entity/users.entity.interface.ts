@@ -27,7 +27,7 @@ export interface IUserRegisterBody extends IUserSave {}
 export interface IUserLoginBody extends Pick<IUser, 'email' | 'password'> {}
 
 export interface IUserLoginRes {
-  user: Omit<IUser, 'uuid' | 'email' | 'password' | 'document'>;
+  user: Omit<IUser, 'uuid' | 'address' | 'email' | 'password' | 'document' | 'image'>;
   token: string;
 }
 
