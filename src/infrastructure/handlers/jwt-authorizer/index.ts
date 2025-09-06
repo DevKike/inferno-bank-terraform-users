@@ -59,6 +59,8 @@ export const handler = async (
 
     const decoded = jwtProvider.verify<IJwtPayload>(token);
 
+    const apiArn = event.routeArn.replace(/\/routes\/.*/, '/*');
+
     return generateAllowPolicy(decoded.id, event.routeArn, {
       userId: decoded.id,
       email: decoded.email,
