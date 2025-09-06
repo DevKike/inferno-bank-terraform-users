@@ -1,0 +1,15 @@
+aws_access_key = ""
+aws_secret_access_key = ""
+aws_region = "us-west-1"
+
+base_cidr_block = "10.0.0.0/16"
+
+secrets_manager_key_value = 
+
+jwt_secret_key = ""
+jwt_token_expiration = ""
+
+bucket_name = "inferno-bank-users-files"
+bucket_enable_versioning = true
+bucket_cors_allowed_origins = ["*"]
+bucket_signed_url_expiration = 3600
