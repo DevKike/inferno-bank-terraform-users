@@ -17,16 +17,27 @@ This project implements a serverless user management service using Terraform, im
 ┌─────────────┐      ┌─────────────┐      ┌──────────────┐
 │ API Gateway │ ──>  │   Lambda    │  ──> │   DynamoDB   │
 └─────────────┘      └─────────────┘      └──────────────┘
+        │                   │
+        │                   │
+        │                   ▼
+        │             ┌─────────────┐
+        │             │     S3      │
+        │             └─────────────┘
+        │                   │
+        │                   ▼
+        │             ┌─────────────┐
+        │             │Secrets Mngr.│
+        │             └─────────────┘
 ```
 
 ### Components
 
-- **Lambda Functions**: register, login, jwt-authorizer, get-profile, update, upload-avatar
 - **API Gateway**: HTTP API with routes for user operations
-- **DynamoDB**: NoSQL database with GSI for email, phone and document lookups
+- **Lambda Functions**: register, login, jwt-authorizer, get-profile, update, upload-avatar
+- **DynamoDB**: NoSQL database with GSIs for email, phone, and document lookups
+- **S3**: Cloud object storage for user avatars
+- **Secrets Manager**: Secure storage for sensitive data (e.g., password encryption keys)
 - **JWT**: Stateless authentication for protected routes
-- **S3**: Cloud object storage for upload avatars
-- **Secrets Manager**: Store, rotate, monitor, and control access to secrets
 
 ## 🔧 Prerequisites
 
