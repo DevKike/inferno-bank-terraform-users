@@ -1,0 +1,16 @@
+export const environments = {
+  awsRegion: process.env.awsRegion,
+  usersTableName: process.env.tableName,
+  usersTablePartitionKey: process.env.tablePartitionKey,
+  usersSecretsManagerName: process.env.secretsManagerName,
+  emailIndexName: process.env.emailIndexName,
+  emailIndexKey: process.env.emailIndexKey,
+  phoneIndexName: process.env.phoneIndexName,
+  phoneIndexKey: process.env.phoneIndexKey,
+  documentIndexName: process.env.documentIndexName,
+  documentIndexKey: process.env.documentIndexKey,
+  jwtSecretKey: process.env.jwtSecretKey,
+  jwtTokenExpiration: parseInt(process.env.jwtTokenExpiration || '3600', 10),
+  bucketName: process.env.bucketName,
+  signedUrlExpiration: parseInt(process.env.signedUrlExpiration || '3600', 10),
+};
