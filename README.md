@@ -330,7 +330,7 @@ Authorization: Bearer <token>
 }
 ```
 
-### Update User Information
+### Upload avatar
 
 ```
 POST /users/profile/avatar
