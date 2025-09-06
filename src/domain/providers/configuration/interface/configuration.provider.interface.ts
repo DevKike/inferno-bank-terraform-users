@@ -11,4 +11,6 @@ export interface IConfigurationProvider {
   getDocumentIndexKey(): string;
   getJwtSecretKey(): string;
   getJwtTokenExpiration(): number;
+  getS3BucketName(): string;
+  getS3SignedUrlExpiration(): number;
 }

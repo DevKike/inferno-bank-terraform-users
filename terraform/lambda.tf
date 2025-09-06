@@ -2,6 +2,7 @@ module "lambda_shared" {
   source             = "./modules/shared"
   role_name          = "users_lambda_role"
   dynamodb_table_arn = module.dynamodb.table_arn
+  s3_bucket_arn      = module.s3_files.bucket_arn
 }
 
 # REGISTER LAMBDA
@@ -119,6 +120,35 @@ resource "aws_apigatewayv2_route" "get_profile_user_route" {
   api_id             = module.api_gateway_shared.api_id
   route_key          = "GET /users/profile"
   target             = "integrations/${module.get_profile_user_lambda.integration_id}"
+  authorization_type = "CUSTOM"
+  authorizer_id      = aws_apigatewayv2_authorizer.jwt_authorizer.id
+}
+
+# UPLOAD AVATAR LAMBDA
+module "upload_avatar_lambda" {
+  source = "./modules/lambda"
+
+  function_name             = "upload_avatar_lambda"
+  lambda_role_arn           = module.lambda_shared.lambda_role_arn
+  source_code_hash          = filebase64sha256("${path.module}/../lambda/upload-avatar.zip")
+  zip_file                  = "${path.module}/../lambda/upload-avatar.zip"
+  api_gateway_id            = module.api_gateway_shared.api_id
+  api_gateway_execution_arn = module.api_gateway_shared.execution_arn
+
+  environment_variables = {
+    awsRegion : var.aws_region
+    tableName : module.dynamodb.table_name
+    tablePartitionKey : module.dynamodb.hash_key
+    bucketName : module.s3_files.bucket_name
+    signedUrlExpiration = var.bucket_signed_url_expiration
+  }
+}
+
+# UPLOAD AVATAR ROUTE
+resource "aws_apigatewayv2_route" "upload_avatar_route" {
+  api_id             = module.api_gateway_shared.api_id
+  route_key          = "POST /users/profile/avatar"
+  target             = "integrations/${module.upload_avatar_lambda.integration_id}"
   authorization_type = "CUSTOM"
   authorizer_id      = aws_apigatewayv2_authorizer.jwt_authorizer.id
 }

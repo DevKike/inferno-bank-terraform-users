@@ -1,3 +1,5 @@
+import { IS3Payload } from '../providers/s3/interface/s3-payload.interface';
+
 export interface IUser {
   uuid: string;
   name: string;
@@ -30,7 +32,7 @@ export interface IUserLoginRes {
 }
 
 export interface IUserUpdate
-  extends Partial<Pick<IUser, 'address' | 'phone'>> {}
+  extends Partial<Pick<IUser, 'address' | 'phone' | 'image'>> {}
 
 export interface IUserUpdateInput extends IUserUpdate {
   id: IUser['uuid'];
@@ -39,3 +41,7 @@ export interface IUserUpdateInput extends IUserUpdate {
 export interface IUserUpdateRes extends Omit<IUser, 'uuid' | 'password'> {}
 
 export interface IUserGetProfileRes extends IUserUpdateRes {}
+
+export interface IUserUploadAvatarBody extends Pick<IUser, 'uuid'> {
+  avatar: IS3Payload;
+}
