@@ -70,3 +70,37 @@ resource "aws_iam_role_policy_attachment" "lambda_secrets_policy" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.secrets_manager_policy.arn
 }
+
+data "aws_iam_policy_document" "lambda_s3_policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject",
+    ]
+    resources = [
+      "${var.s3_bucket_arn}/*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+    ]
+    resources = [
+      var.s3_bucket_arn
+    ]
+  }
+}
+
+resource "aws_iam_policy" "lambda_s3_policy" {
+  name   = "${var.role_name}_s3_policy"
+  policy = data.aws_iam_policy_document.lambda_s3_policy.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_s3_attachment" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.lambda_s3_policy.arn
+}

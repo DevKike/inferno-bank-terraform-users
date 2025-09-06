@@ -60,4 +60,12 @@ export class ConfigurationProvider implements IConfigurationProvider {
   getJwtTokenExpiration(): number {
     return environments.jwtTokenExpiration;
   }
+
+  getS3BucketName(): string {
+    return environments.bucketName!;
+  }
+
+  getS3SignedUrlExpiration(): number {
+    return environments.signedUrlExpiration!;
+  }
 }
