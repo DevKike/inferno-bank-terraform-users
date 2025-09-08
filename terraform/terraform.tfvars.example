@@ -15,3 +15,4 @@ bucket_cors_allowed_origins = ["*"]
 bucket_signed_url_expiration = 3600
 
 user_created_queue_url = ""
+notifications_queue_url = ""

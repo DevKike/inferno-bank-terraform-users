@@ -66,3 +66,8 @@ variable "users_created_queue_url" {
   type      = string
   sensitive = true
 }
+
+variable "notifications_queue_url" {
+  type         = string
+  sensitive = true
+}
