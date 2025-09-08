@@ -13,3 +13,5 @@ bucket_name = "inferno-bank-users-files"
 bucket_enable_versioning = true
 bucket_cors_allowed_origins = ["*"]
 bucket_signed_url_expiration = 3600
+
+user_created_queue_url = ""

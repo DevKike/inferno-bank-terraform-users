@@ -61,3 +61,8 @@ variable "bucket_signed_url_expiration" {
   type        = number
   default     = 3600
 }
+
+variable "users_created_queue_url" {
+  type      = string
+  sensitive = true
+}
