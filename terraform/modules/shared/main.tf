@@ -115,7 +115,10 @@ resource "aws_iam_policy" "lambda_sqs_policy" {
         Action = [
           "sqs:SendMessage"
         ]
-        Resource = "arn:aws:sqs:us-west-1:475009428045:create-request-card-sqs"
+        Resource = [
+          "arn:aws:sqs:us-west-1:475009428045:create-request-card-sqs",
+          "arn:aws:sqs:us-west-1:475009428045:notification-email-sqs"
+        ]
       }
     ]
   })
@@ -125,3 +128,4 @@ resource "aws_iam_role_policy_attachment" "lambda_sqs_policy_attachment" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.lambda_sqs_policy.arn
 }
+
