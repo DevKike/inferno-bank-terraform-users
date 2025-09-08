@@ -21,6 +21,7 @@ export class SqsProvider implements ISqsProvider {
 
       await this._sqsProvider.send(command);
     } catch (error) {
+      console.error('🚀 ~ SqsProvider ~ send ~ error:', error);
       throw error;
     }
   }

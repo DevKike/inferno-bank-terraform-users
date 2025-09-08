@@ -8,6 +8,8 @@ import { IUseCase } from '../../../domain/use-case/use-case.interface';
 import { IHashProvider } from '../../../domain/providers/hash/interface/hash.provider.interface';
 import { IJwtProvider } from '../../../domain/providers/jwt/interface/jwt.provider.interface';
 import { NotFoundException } from '../../../domain/exceptions/not-found.exception';
+import { ISqsProvider } from '../../../domain/providers/sqs/interface/sqs.provider.interface';
+import { IConfigurationProvider } from '../../../domain/providers/configuration/interface/configuration.provider.interface';
 
 export class UsersLoginUseCase
   implements IUseCase<IUserLoginBody, IUserLoginRes>
@@ -15,7 +17,9 @@ export class UsersLoginUseCase
   constructor(
     private readonly _usersService: IUsersService,
     private readonly _hashProvider: IHashProvider,
-    private readonly _jwtProvider: IJwtProvider
+    private readonly _jwtProvider: IJwtProvider,
+    private readonly _sqsProvider: ISqsProvider,
+    private readonly _configurationProvider: IConfigurationProvider
   ) {}
 
   async execute(input: IUserLoginBody): Promise<IUserLoginRes> {
@@ -36,6 +40,17 @@ export class UsersLoginUseCase
         id: user.uuid,
         email: user.email,
         name: user.name,
+      });
+
+      await this._sqsProvider.send({
+        queueUrl: this._configurationProvider.notificationsQueueUrl(),
+        data: {
+          type: 'USER.LOGIN',
+          data: {
+            email: user.email,
+            date: new Date().toISOString(),
+          },
+        },
       });
 
       const { uuid, email, password, document, address, image, ...userData } =

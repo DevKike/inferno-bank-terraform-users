@@ -56,6 +56,17 @@ export class UserRegisterUseCase implements IUseCase<IUserRegisterBody, void> {
           userId: user.uuid,
         },
       });
+
+      await this._sqsProvider.send({
+        queueUrl: this._configurationProvider.notificationsQueueUrl(),
+        data: {
+          type: 'WELCOME',
+          data: {
+            fullName: `${user.name} ${user.lastName}`,
+            email: user.email,
+          },
+        },
+      });
     } catch (error) {
       throw error;
     }

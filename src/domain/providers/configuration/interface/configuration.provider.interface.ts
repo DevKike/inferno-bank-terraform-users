@@ -14,4 +14,5 @@ export interface IConfigurationProvider {
   getS3BucketName(): string;
   getS3SignedUrlExpiration(): number;
   getUsersCreatedQueueUrl(): string;
+  notificationsQueueUrl(): string;
 }

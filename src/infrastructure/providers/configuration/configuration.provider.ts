@@ -72,4 +72,8 @@ export class ConfigurationProvider implements IConfigurationProvider {
   getUsersCreatedQueueUrl(): string {
     return environments.usersCreatedQueueUrl!;
   }
+
+  notificationsQueueUrl(): string {
+    return environments.notificationsQueueUrl!;
+  }
 }

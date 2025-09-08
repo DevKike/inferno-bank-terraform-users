@@ -14,4 +14,5 @@ export const environments = {
   bucketName: process.env.bucketName,
   signedUrlExpiration: parseInt(process.env.signedUrlExpiration || '3600', 10),
   usersCreatedQueueUrl: process.env.users_created_queue_url,
+  notificationsQueueUrl: process.env.notifications_queue_url,
 };

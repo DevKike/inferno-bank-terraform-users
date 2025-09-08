@@ -11,6 +11,7 @@ import { errorFormatter } from '../../utils/error-formatter/error-formatter.util
 import httpErrorHandler from '@middy/http-error-handler';
 import { usersUpdateSchema } from '../../schemas/update/users-update.schema';
 import { IUserUpdate } from '../../../domain/entity/users.entity.interface';
+import { SqsProvider } from '../../providers/sqs/sqs.provider';
 
 const usersUpdateHandler = async (
   event: APIGatewayProxyEvent
@@ -21,7 +22,11 @@ const usersUpdateHandler = async (
     const updateData = event.body as unknown as IUserUpdate;
 
     const response = await new UsersUpdateUseCase(
-      new UsersService(new UsersRepository(ConfigurationProvider.getInstance()))
+      new UsersService(
+        new UsersRepository(ConfigurationProvider.getInstance())
+      ),
+      new SqsProvider(ConfigurationProvider.getInstance()),
+      ConfigurationProvider.getInstance()
     ).execute({ ...updateData, id: userId });
 
     return {
