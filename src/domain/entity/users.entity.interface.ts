@@ -7,9 +7,9 @@ export interface IUser {
   email: string;
   password: string;
   document: string;
-  address: string | null;
-  phone: string | null;
-  image: string | null;
+  address?: string;
+  phone?: string;
+  image?: string;
 }
 
 export interface IUserSave

@@ -10,6 +10,6 @@ export interface IUsersService {
   getByEmail(email: IUser['email']): Promise<IUser | null>;
   getByPhone(phone: IUser['phone']): Promise<IUser | null>;
   getByDocument(document: IUser['document']): Promise<IUser | null>;
-  create(user: IUserRegisterBody): Promise<void>;
+  create(user: IUserRegisterBody): Promise<IUser>;
   update(id: IUser['uuid'], userData: IUserUpdate): Promise<IUserUpdateRes>;
 }

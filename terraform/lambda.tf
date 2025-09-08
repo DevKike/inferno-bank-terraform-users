@@ -19,15 +19,17 @@ module "register_user_lambda" {
 
 
   environment_variables = {
-    awsRegion          = var.aws_region
-    tableName          = module.dynamodb.table_name
-    secretsManagerName = module.secrets_manager_shared.secrets_manager_name
-    emailIndexName     = module.dynamodb.email_gsi_name
-    emailIndexKey      = module.dynamodb.email_gsi_key
-    phoneIndexName     = module.dynamodb.phone_gsi_name
-    phoneIndexKey      = module.dynamodb.phone_gsi_key
-    documentIndexName  = module.dynamodb.document_gsi_name
-    documentIndexKey   = module.dynamodb.document_gsi_key
+    awsRegion               = var.aws_region
+    tableName               = module.dynamodb.table_name
+    secretsManagerName      = module.secrets_manager_shared.secrets_manager_name
+    emailIndexName          = module.dynamodb.email_gsi_name
+    emailIndexKey           = module.dynamodb.email_gsi_key
+    phoneIndexName          = module.dynamodb.phone_gsi_name
+    phoneIndexKey           = module.dynamodb.phone_gsi_key
+    documentIndexName       = module.dynamodb.document_gsi_name
+    documentIndexKey        = module.dynamodb.document_gsi_key
+    users_created_queue_url = var.users_created_queue_url
+    notifications_queue_url = var.notifications_queue_url
   }
 }
 
@@ -52,13 +54,13 @@ module "login_user_lambda" {
   environment_variables = {
     awsRegion = var.aws_region
     tableName : module.dynamodb.table_name
-    emailIndexName     = module.dynamodb.email_gsi_name
-    emailIndexKey      = module.dynamodb.email_gsi_key
-    secretsManagerName = module.secrets_manager_shared.secrets_manager_name
-    jwtSecretKey       = var.jwt_secret_key
-    jwtTokenExpiration = var.jwt_token_expiration
+    emailIndexName          = module.dynamodb.email_gsi_name
+    emailIndexKey           = module.dynamodb.email_gsi_key
+    secretsManagerName      = module.secrets_manager_shared.secrets_manager_name
+    jwtSecretKey            = var.jwt_secret_key
+    jwtTokenExpiration      = var.jwt_token_expiration
+    notifications_queue_url = var.notifications_queue_url
   }
-
 }
 
 # LOGIN ROUTE
@@ -80,11 +82,12 @@ module "update_user_lambda" {
   api_gateway_execution_arn = module.api_gateway_shared.execution_arn
 
   environment_variables = {
-    awsRegion         = var.aws_region
-    tableName         = module.dynamodb.table_name
-    tablePartitionKey = module.dynamodb.hash_key
-    phoneIndexName    = module.dynamodb.phone_gsi_name
-    phoneIndexKey     = module.dynamodb.phone_gsi_key
+    awsRegion               = var.aws_region
+    tableName               = module.dynamodb.table_name
+    tablePartitionKey       = module.dynamodb.hash_key
+    phoneIndexName          = module.dynamodb.phone_gsi_name
+    phoneIndexKey           = module.dynamodb.phone_gsi_key
+    notifications_queue_url = var.notifications_queue_url
   }
 }
 

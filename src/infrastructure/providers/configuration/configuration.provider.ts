@@ -68,4 +68,12 @@ export class ConfigurationProvider implements IConfigurationProvider {
   getS3SignedUrlExpiration(): number {
     return environments.signedUrlExpiration!;
   }
+
+  getUsersCreatedQueueUrl(): string {
+    return environments.usersCreatedQueueUrl!;
+  }
+
+  notificationsQueueUrl(): string {
+    return environments.notificationsQueueUrl!;
+  }
 }

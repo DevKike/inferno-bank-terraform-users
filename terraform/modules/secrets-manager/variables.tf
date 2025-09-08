@@ -1,7 +1,7 @@
 variable "secrets_manager_name" {
   description = "User's secrets manager"
   type        = string
-  default     = "users_secrets_manager"
+  default     = "secrets_user_service"
 }
 
 variable "secrets_manager_description" {

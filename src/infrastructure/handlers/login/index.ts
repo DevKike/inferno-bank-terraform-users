@@ -13,6 +13,7 @@ import { UsersRepository } from '../../repository/users.repository';
 import { ConfigurationProvider } from '../../providers/configuration/configuration.provider';
 import { JwtProvider } from '../../providers/jwt/jwt.provider';
 import { errorFormatter } from '../../utils/error-formatter/error-formatter.util';
+import { SqsProvider } from '../../providers/sqs/sqs.provider';
 
 const loginHandler = async (
   event: APIGatewayProxyEvent
@@ -25,7 +26,9 @@ const loginHandler = async (
     const response = await new UsersLoginUseCase(
       new UsersService(new UsersRepository(configurationInstance)),
       new HashProvider(),
-      new JwtProvider(configurationInstance)
+      new JwtProvider(configurationInstance),
+      new SqsProvider(ConfigurationProvider.getInstance()),
+      ConfigurationProvider.getInstance()
     ).execute(userData);
 
     return {

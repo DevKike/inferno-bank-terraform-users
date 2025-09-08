@@ -43,9 +43,9 @@ export class UsersService implements IUsersService {
     }
   }
 
-  async create(user: IUserRegisterBody): Promise<void> {
+  async create(user: IUserRegisterBody): Promise<IUser> {
     try {
-      await this._usersRepository.save(user);
+      return this._usersRepository.save(user);
     } catch (error) {
       throw error;
     }

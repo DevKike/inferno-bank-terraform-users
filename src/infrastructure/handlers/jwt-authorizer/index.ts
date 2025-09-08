@@ -61,7 +61,7 @@ export const handler = async (
 
     const apiArn = event.routeArn.replace(/\/routes\/.*/, '/*');
 
-    return generateAllowPolicy(decoded.id, event.routeArn, {
+    return generateAllowPolicy(decoded.id, apiArn, {
       userId: decoded.id,
       email: decoded.email,
       name: decoded.name,

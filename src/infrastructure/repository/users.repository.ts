@@ -123,7 +123,7 @@ export class UsersRepository implements IUsersRepository {
     }
   }
 
-  async save(user: IUserSave): Promise<void> {
+  async save(user: IUserSave): Promise<IUser> {
     const userId: IUser['uuid'] = uuidv4();
     const storedUser: IUserStored = { uuid: userId, ...user };
 
@@ -134,6 +134,8 @@ export class UsersRepository implements IUsersRepository {
 
     try {
       await this._dynamoDbClient.send(command);
+
+      return storedUser;
     } catch (error) {
       throw error;
     }
