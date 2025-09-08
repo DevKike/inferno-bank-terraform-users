@@ -13,6 +13,7 @@ import { HTTP_STATUS_CODE } from '../../../domain/enums/http-status-code.enum';
 import { SecretsManagerProvider } from '../../providers/secrets-manager/secrets-manager.provider';
 import { HashProvider } from '../../providers/hash/hash.provider';
 import { ConfigurationProvider } from '../../providers/configuration/configuration.provider';
+import { SqsProvider } from '../../providers/sqs/sqs.provider';
 
 const userRegisterHandler = async (
   event: APIGatewayProxyEvent
@@ -20,13 +21,14 @@ const userRegisterHandler = async (
   try {
     const userData = event.body as unknown as IUserRegisterBody;
 
-    const configurationInstance = ConfigurationProvider.getInstance();
-
     await new UserRegisterUseCase(
-      new UsersService(new UsersRepository(configurationInstance)),
+      new UsersService(
+        new UsersRepository(ConfigurationProvider.getInstance())
+      ),
       new SecretsManagerProvider(),
       new HashProvider(),
-      configurationInstance
+      new SqsProvider(ConfigurationProvider.getInstance()),
+      ConfigurationProvider.getInstance()
     ).execute(userData);
 
     return {

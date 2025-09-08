@@ -5,12 +5,14 @@ import { ISecretsManagerProvider } from '../../../domain/providers/secret-manage
 import { IHashProvider } from '../../../domain/providers/hash/interface/hash.provider.interface';
 import { IConfigurationProvider } from '../../../domain/providers/configuration/interface/configuration.provider.interface';
 import { AlreadyExistsException } from '../../../domain/exceptions/already-exists.exception';
+import { ISqsProvider } from '../../../domain/providers/sqs/interface/sqs.provider.interface';
 
 export class UserRegisterUseCase implements IUseCase<IUserRegisterBody, void> {
   constructor(
     private readonly _usersService: IUsersService,
     private readonly _secretsManagerProvider: ISecretsManagerProvider,
     private readonly _hashProvider: IHashProvider,
+    private readonly _sqsProvider: ISqsProvider,
     private readonly _configurationProvider: IConfigurationProvider
   ) {}
 
@@ -43,7 +45,17 @@ export class UserRegisterUseCase implements IUseCase<IUserRegisterBody, void> {
         secret.key
       );
 
-      await this._usersService.create({ ...input, password: hashedPassword });
+      const user = await this._usersService.create({
+        ...input,
+        password: hashedPassword,
+      });
+
+      await this._sqsProvider.send({
+        queueUrl: this._configurationProvider.getUsersCreatedQueueUrl(),
+        data: {
+          userId: user.uuid,
+        },
+      });
     } catch (error) {
       throw error;
     }
