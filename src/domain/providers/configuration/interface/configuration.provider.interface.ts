@@ -13,4 +13,5 @@ export interface IConfigurationProvider {
   getJwtTokenExpiration(): number;
   getS3BucketName(): string;
   getS3SignedUrlExpiration(): number;
+  getUsersCreatedQueueUrl(): string;
 }

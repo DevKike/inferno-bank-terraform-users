@@ -13,4 +13,5 @@ export const environments = {
   jwtTokenExpiration: parseInt(process.env.jwtTokenExpiration || '3600', 10),
   bucketName: process.env.bucketName,
   signedUrlExpiration: parseInt(process.env.signedUrlExpiration || '3600', 10),
+  usersCreatedQueueUrl: process.env.users_created_queue_url,
 };
